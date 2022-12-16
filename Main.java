@@ -2,43 +2,39 @@ import java.io.*;
 import java.util.Random;
 
 class GFG {
-    public static int cutRod(int prices[], int n)
+    public static int ROD_CUT_GREEDY(int n, int prices[])
     {
-        int mat[][] = new int[n + 1][n + 1];
-        for (int i = 0; i <= n; i++) {
-            for (int j = 0; j <= n; j++) {
-                if (i == 0 || j == 0) {
-                    mat[i][j] = 0;
-                }
-                else {
-                    if (i == 1) {
-                        mat[i][j] = j * prices[i - 1];
-                    }
-                    else {
-                        if (i > j)
-                            mat[i][j] = mat[i - 1][j];
-                        else
-                            mat[i][j] = Math.max(prices[i - 1] + mat[i][j - i], mat[i - 1][j]);
-                    }
-                }
+        // Array para armazenar o valor máximo de
+        // p(i)/i para cada i
+        int[] dp = new int[n + 1];
+
+        // Iterar em todos os comprimentos possíveis da barra de ferro
+        for (int i = 1; i <= n; i++) {
+            // Procura o valor máximo p(j)/j para todo  j de tal forma que j <= i
+            int maxValue = Integer.MIN_VALUE;
+            for (int j = 1; j <= i; j++) {
+                maxValue = Math.max(maxValue, prices[j-1] / j);
             }
+
+            // Armazena o valor máximo de p(j)/j no array dp
+            dp[i] = maxValue;
         }
 
-        return mat[n][n];
+        // Retorna o valor máximo de p(i)/i para i = n
+        return dp[n];
     }
 
     public static int BOTTOM_UP_CUT_ROD(int p[],int n){
         int r[] = new int[n+1];
-        int q;
+
         r[0] = 0;
         for (int j = 1; j <= n; j++)
         {
-            q = Integer.MIN_VALUE;
+            r[j] = Integer.MIN_VALUE;
             for (int i = 0; i < j; i++)
             {
-                q = Math.max(q, p[i]+r[j-i-1]);
+                r[j] = Math.max(r[j], p[i]+r[j-i-1]);
             }
-            r[j] = q;
         }
         return r[n];
     }
@@ -54,21 +50,25 @@ class GFG {
 
             int prices[] = new int[n];
 
-            for(int j = 0; j < n; j++) prices[j] = generator.nextInt(100);
-
-            long startIterative = System.nanoTime();
-            int res1 = cutRod(prices, n);
-            long elapsedIterative = System.nanoTime() - startIterative;
-            System.out.println("o metodo iterativo executou em " + elapsedIterative);
-            System.out.println("(ITERATIVO): Valor maximo obtido eh " + res1);
-
-            System.out.println("#################################################################");
+            for(int j = 0; j < n; j++)
+                prices[j] = generator.nextInt(100);
 
             long startGreedy = System.nanoTime();
-            int res2 = BOTTOM_UP_CUT_ROD(prices, n);
+            int res1 = ROD_CUT_GREEDY(n, prices);
             long elapsedGreedy = System.nanoTime() - startGreedy;
-            System.out.println("o metodo guloso executou em " + elapsedGreedy);
-            System.out.println("(GULOSO): Valor maximo obtido eh: " + res2);
+
+            System.out.println("\n");
+
+            System.out.println("o metodo guloso executou em " + elapsedGreedy + " ns");
+            System.out.println("(GULOSO): Valor maximo obtido eh " + res1);
+
+            System.out.println("\n");
+
+            long startIterative = System.nanoTime();
+            int res2 = BOTTOM_UP_CUT_ROD(prices, n);
+            long elapsedIterative = System.nanoTime() - startIterative;
+            System.out.println("o metodo iterativo executou em " + elapsedIterative + " ns");
+            System.out.println("(ITERATIVO): Valor maximo obtido eh: " + res2);
 
             System.out.println("#################################################################");
         }

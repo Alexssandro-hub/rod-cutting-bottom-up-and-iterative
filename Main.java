@@ -94,7 +94,7 @@ class GFG {
 
             System.out.println("o metodo guloso executou em " + elapsedGreedy + " ns");
             System.out.println("(GULOSO): Valor maximo obtido eh " + res1);
-            System.out.println("(GULOSO): Solução ótima eh: " + solution);
+            System.out.println("(GULOSO): Solução eh: " + solution);
 
             System.out.println("\n");
 

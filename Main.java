@@ -70,7 +70,6 @@ class GFG {
             System.out.println("o metodo iterativo executou em " + elapsedIterative + " ns");
             System.out.println("(ITERATIVO): Valor maximo obtido eh: " + res2);
 
-            System.out.println("#################################################################");
         }
     }
 }

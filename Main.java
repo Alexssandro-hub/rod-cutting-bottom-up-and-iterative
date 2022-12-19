@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 class GFG {
@@ -22,6 +24,31 @@ class GFG {
 
         // Retorna o valor máximo de p(i)/i para i = n
         return dp[n];
+    }
+
+    public static List<Integer> SEARCH_GOOD_SOLUTION_AUX(List<Integer> barras, int comprimento) {
+        // Ordenamos as barras em ordem decrescente de comprimento
+        barras.sort((a, b) -> b - a);
+
+        List<Integer> cortes = new ArrayList<>();
+        int comprimentoRestante = comprimento;
+
+        // Percorremos as barras
+        for (int barra : barras) {
+            // Verificamos se o comprimento da barra é menor ou igual ao comprimento restante
+            if (barra <= comprimentoRestante) {
+                // Adicionamos a barra cortada à lista de cortes
+                cortes.add(barra);
+                // Atualizamos o comprimento restante
+                comprimentoRestante -= barra;
+
+                // Se o comprimento restante for zero, terminamos o loop
+                if (comprimentoRestante == 0) {
+                    break;
+                }
+            }
+        }
+        return cortes;
     }
 
     public static int BOTTOM_UP_CUT_ROD(int p[],int n){
@@ -48,19 +75,26 @@ class GFG {
 
             System.out.println("Tamanho da Entrada eh: " + n);
 
+            List<Integer> barras = new ArrayList<Integer>();
             int prices[] = new int[n];
 
-            for(int j = 0; j < n; j++)
-                prices[j] = generator.nextInt(100);
+            for(int j = 0; j < n; j++){
+                int value = generator.nextInt(100);
+
+                barras.add(value);
+                prices[j] = value;
+            }
 
             long startGreedy = System.nanoTime();
             int res1 = ROD_CUT_GREEDY(n, prices);
+            List<Integer> solution = SEARCH_GOOD_SOLUTION_AUX(barras, n);
             long elapsedGreedy = System.nanoTime() - startGreedy;
 
             System.out.println("\n");
 
             System.out.println("o metodo guloso executou em " + elapsedGreedy + " ns");
             System.out.println("(GULOSO): Valor maximo obtido eh " + res1);
+            System.out.println("(GULOSO): Solução ótima eh: " + solution);
 
             System.out.println("\n");
 
@@ -70,6 +104,8 @@ class GFG {
             System.out.println("o metodo iterativo executou em " + elapsedIterative + " ns");
             System.out.println("(ITERATIVO): Valor maximo obtido eh: " + res2);
 
+            System.out.println("#################################################################");
+            System.out.println("\n");
         }
     }
 }
